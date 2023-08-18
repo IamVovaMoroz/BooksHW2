@@ -19,7 +19,11 @@ app.use((req, res) => {
 })
 // это обработчик ошибок, при выпадении ошиьки и указании next(error) они ищет эту функцию и выполняет то же действие
 app.use((err, req, res, next) => {
-  res.status(800).json({ message: err.message })
+  // если статус пришёл с try он его запишет, если нет даст 500, аналогично с message
+  const {status = 500, message = "Server error" } = err
+  res.status(status).json({ message })
+  // json({ message }) =>>> ({ message: message })
+
 })
 
 module.exports = app

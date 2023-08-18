@@ -8,7 +8,7 @@ const path = require('path')
 const { nanoid } = require('nanoid')
 
 // const booksPath = path.join(__dirname, "", "books.json" )
-const booksPath = path.join(__dirname, 'books1.json')
+const booksPath = path.join(__dirname, 'books.json')
 
 // console.log(booksPath)
 
