@@ -1,18 +1,30 @@
 // ПОЛУЧАЕМ КНИГИ С БЕКЭНДА И ОТПРАВЛЯЕМ НА ФРОНТЕНД. ФРОНТЕНДУ НУЖНО ОТПРАВЛЯТЬ ОШИБКИ
 const express = require('express')
 
+// ДЛЯ ПРОВЕРКИ ТЕЛА ПОЛУЧЕННОГО ОТ ФРОНТЕНДА ИСПОЛЬЗУЕМ JOI
+
+const Joi = require("joi")
+
 const router = express.Router()
 
 // импортируем функцию обработки и создания ошибок и статусов
 
 const {HttpError} = require("../../helpers")
 
-
 // импортируем обьект работы с книгами 
 const books = require("../../models/books")
 
-// получение всех книг
-router.get('/', async (req, res) => {
+// СОЗДАЁМ JOI схему - требования к получаемому обьекту от фронтенда, на соответствие в базе
+
+const addSchema = Joi.object({
+  title: Joi.string().required(),
+  author: Joi.string().required(),
+})
+
+
+// 1) ПОЛУЧЕНИЕ ВСЕХ КНИГ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+router.get('/', async (req, res, next) => {
   try {
     const result = await books.getAll()
     res.json(result)
@@ -22,7 +34,7 @@ router.get('/', async (req, res) => {
 })
 
 
-// получение книги по ид(:id) который нужно прочитать из req.params мы получаем значение введённое пользователем
+// 2) ПОЛУЧЕНИЕ КНИГИ ПО ИД (:id) который нужно прочитать из req.params мы получаем значение введённое пользователем ++++++++++++++++++++++++++++++++++++++++++
 
 router.get('/:id', async (req, res, next) => {
   try{
@@ -43,23 +55,96 @@ res.json(result)
   }catch (error) {
     // next(error) - это обработчик ошибок, он ищет где есть 4 параметра 
     next(error)
+    // АНАЛОГИНЧЫЕ ЗАПИСИ 1 или 2
+    // 1 ++++++++
     // const {status = 500, message = "Server error"} = error
     // res.status(status).json({message: message})
-
+   // 2 +++++++++
     // res.status(500).json({message: "Server error"})
    }
 })
 
+// 3) ДОБАВЛЕНИЕ КНИГ В БАЗУ  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//  Для получения тела запроса обращаемся с фронтенда от пользователя = req.body
 router.post('/', async (req, res, next) => {
-  // try{}catch(error){}
+  try{
+// используем схему нашу addSchema, вызываем метод validate, который проверит req.body
+    const {error} = addSchema.validate(req.body)
+
+    // если обьект прошёл валидацию, проверку успешно - error - undefined, если не прошёл проверку в error залетит какая ошибка в соответствии с валидатором . к примеру "author" is required
+
+    if(error){
+      throw HttpError(400, error.message)
+    }
+// если проверку все прошло от addSchema то отправляем запрос на сервер с телом для добавляения и выкидываем статус
+    const result = await books.addBook(req.body)
+    // если добавили статус 201 и отправляем результат на фронтенд
+    res.status(201).json(result)
+   
+  }catch(error){
+    next(error)
+  }
 })
+
+//  4) УДАЛЕНИЕ ПО ИД +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 router.delete('/:id', async (req, res, next) => {
-  res.json({ message: 'template message' })
+ try{
+  const { id } = req.params
+const result = await books.deleteById(id)
+
+// если книги с таким ил нет в базе
+if(!result){
+
+  // HttpError если поймал ошибку кидает в catch , тот или status и message получает и выдаёт, или с правой стороны по умолчанию то что записали 500 и "Server error"
+throw HttpError(404, "Not found")
+
+
+}
+
+res.json({message: "Delete success"})
+
+ }catch(error){
+  next(error)}
+ 
 })
 
+
+//  5) ОБНОВЛЕНИЕ КНИГИ ПО ИД +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 router.put('/:id', async (req, res, next) => {
-  res.json({ message: 'template message' })
+
+try{
+  // проверяем тело запроса что соответсвует требованиям Joi
+  // используем схему нашу addSchema, вызываем метод validate, который проверит req.body
+  const {error} = addSchema.validate(req.body)
+
+  // если обьект прошёл валидацию, проверку успешно - error - undefined, если не прошёл проверку в error залетит какая ошибка в соответствии с валидатором . к примеру "author" is required
+
+  if(error){
+    throw HttpError(400, error.message)
+  }
+// если все впорядке, обновляем. Берем Ид отправленный с фронтенда
+const {id } = req.params
+// отправляем запрос на изменения id из ссылки, req.body - все тело отправленное нам с фронтенда
+
+const result = await books.updateById(id, req.body)
+// если книги с таким ил нет в базе
+if(!result){
+
+  // HttpError если поймал ошибку кидает в catch , тот или status и message получает и выдаёт, или с правой стороны по умолчанию то что записали 500 и "Server error"
+throw HttpError(404, "Not found")
+
+
+}
+// если получилось обновить рез на фронт высылаем
+res.json(result)
+}catch(error){
+  next(error)
+}
+
+  
 })
 
 module.exports = router
