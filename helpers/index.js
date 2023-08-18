@@ -1,3 +1,3 @@
 const HttpError = require("./HttpError")
-
-module.exports = {HttpError}
+const controllerWrapper =require("./controllerWrapper")
+module.exports = {HttpError, controllerWrapper}
