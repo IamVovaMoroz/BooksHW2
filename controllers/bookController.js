@@ -85,13 +85,16 @@ const getById = async (req, res) => {
 
 const addBook = async (req, res) => {
   // используем схему нашу addSchema, вызываем метод validate, который проверит req.body
-  const { error } = addSchema.validate(req.body)
 
-  // если обьект прошёл валидацию, проверку успешно - error - undefined, если не прошёл проверку в error залетит какая ошибка в соответствии с валидатором . к примеру "author" is required
 
-  if (error) {
-    throw HttpError(400, error.message)
-  }
+//   ЭТУ ОШИЬКУ ПЕРЕНЕСЛИ ВВАЛИДЕЙТ БОДИ
+//   const { error } = addSchema.validate(req.body)
+
+//   // если обьект прошёл валидацию, проверку успешно - error - undefined, если не прошёл проверку в error залетит какая ошибка в соответствии с валидатором . к примеру "author" is required
+
+//   if (error) {
+//     throw HttpError(400, error.message)
+//   }
   // если проверку все прошло от addSchema то отправляем запрос на сервер с телом для добавляения и выкидываем статус
   const result = await books.addBook(req.body)
   // если добавили статус 201 и отправляем результат на фронтенд
@@ -114,13 +117,13 @@ const deleteById = async (req, res) => {
 const updateById = async (req, res) => {
   // проверяем тело запроса что соответсвует требованиям Joi
   // используем схему нашу addSchema, вызываем метод validate, который проверит req.body
-  const { error } = addSchema.validate(req.body)
+//   const { error } = addSchema.validate(req.body)
 
-  // если обьект прошёл валидацию, проверку успешно - error - undefined, если не прошёл проверку в error залетит какая ошибка в соответствии с валидатором . к примеру "author" is required
+//   // если обьект прошёл валидацию, проверку успешно - error - undefined, если не прошёл проверку в error залетит какая ошибка в соответствии с валидатором . к примеру "author" is required
 
-  if (error) {
-    throw HttpError(400, error.message)
-  }
+//   if (error) {
+//     throw HttpError(400, error.message)
+//   }
   // если все впорядке, обновляем. Берем Ид отправленный с фронтенда
   const { id } = req.params
   // отправляем запрос на изменения id из ссылки, req.body - все тело отправленное нам с фронтенда

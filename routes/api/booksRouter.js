@@ -7,6 +7,10 @@ const express = require('express')
 
 const bookController = require("../../controllers/bookController")
 
+const {validateBody} = require("../../middlewares")
+
+const schemas = require("../../schemas/booksShemas")
+
 const router = express.Router()
 
 // импортируем функцию обработки и создания ошибок и статусов
@@ -35,6 +39,10 @@ const router = express.Router()
 //   }
 // })
 
+
+// validateBody(schemas.addSchema) мы передаем схему и она возращает нам функцию
+
+
 router.get('/', bookController.getAll )
 
 
@@ -46,7 +54,7 @@ router.get('/:id', bookController.getById)
 // 3) ДОБАВЛЕНИЕ КНИГ В БАЗУ  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //  Для получения тела запроса обращаемся с фронтенда от пользователя = req.body
-router.post('/', bookController.addBook )
+router.post('/', validateBody(schemas.addSchema), bookController.addBook )
 
 //  4) УДАЛЕНИЕ ПО ИД +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -55,6 +63,6 @@ router.delete('/:id', bookController.deleteById)
 
 //  5) ОБНОВЛЕНИЕ КНИГИ ПО ИД +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-router.put('/:id', bookController.updateById)
+router.put('/:id',  validateBody(schemas.addSchema),  bookController.updateById)
 
 module.exports = router
