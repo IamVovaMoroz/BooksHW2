@@ -1,6 +1,6 @@
 // ДЛЯ ПРОВЕРКИ ТЕЛА ПОЛУЧЕННОГО ОТ ФРОНТЕНДА ИСПОЛЬЗУЕМ JOI
 
-const Joi = require('joi')
+// const Joi = require('joi')
 
 // const router = express.Router()
 
@@ -13,10 +13,10 @@ const books = require('../models/books')
 
 // СОЗДАЁМ JOI схему - требования к получаемому обьекту от фронтенда, на соответствие в базе
 
-const addSchema = Joi.object({
-  title: Joi.string().required(),
-  author: Joi.string().required()
-})
+// const addSchema = Joi.object({
+//   title: Joi.string().required(),
+//   author: Joi.string().required()
+// })
 
 // +++++++++++++++++++++++++++++++++++++++++ Без декоратор функция
 // const getAll =  async (req, res, next) => {
