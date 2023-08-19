@@ -1,10 +1,14 @@
 const express = require('express')
 const logger = require('morgan')
 const cors = require('cors')
+// для работы env
+require("dotenv").config()
 // путь к роутам
 const booksRouter = require('./routes/api/booksRouter')
 
 const app = express()
+
+
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 
