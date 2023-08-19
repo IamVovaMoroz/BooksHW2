@@ -4,9 +4,9 @@ const mongoose = require("mongoose")
 
 
 // в коде указываем откуда данные брать, эту переменную для работы render Environment
-const {DB_HOST} = process.env
+const {DB_HOST, PORT = 3000} = process.env
 mongoose.connect(DB_HOST).then(()=>{ 
-  app.listen(3000, () => {
+  app.listen(PORT, () => {
   console.log("Server running. Use our API on port: 3000")})
   console.log("Database connect success")}).catch(
     error => {
