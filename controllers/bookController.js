@@ -11,6 +11,10 @@ const { HttpError, controllerWrapper } = require('../helpers')
 // импортируем обьект работы с книгами
 const books = require('../models/books')
 
+// импортируем схему для базы данных.
+
+const Book = require("../models/book")
+
 // СОЗДАЁМ JOI схему - требования к получаемому обьекту от фронтенда, на соответствие в базе
 
 // const addSchema = Joi.object({
