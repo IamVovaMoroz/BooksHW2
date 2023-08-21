@@ -8,12 +8,12 @@
 
 const { HttpError, controllerWrapper } = require('../helpers')
 
-// импортируем обьект работы с книгами
+// импортируем обьект работы с книгами из файла json в папке
 const books = require('../models/books')
 
-// импортируем схему для базы данных.
+// импортируем схему и модель(класс) для базы данных онлайн mongoDB.
 
-const Book = require("../models/book")
+const {Book} = require("../models/book")
 
 // СОЗДАЁМ JOI схему - требования к получаемому обьекту от фронтенда, на соответствие в базе
 
@@ -34,7 +34,13 @@ const Book = require("../models/book")
 
 // ++++++++++++++++++++++++++++++++++++++++++ с декоратором убираем try, catch и в контролер оборачиваем внизу
 const getAll = async (req, res) => {
-  const result = await books.getAll()
+  // для работы с Json было
+  // const result = await books.getAll()
+
+  // для работы с mongjDB
+  const result = await Book.find()
+  // const result = await Book.find({}, "data title")
+
 
   res.json(result)
 }
@@ -70,11 +76,19 @@ const getAll = async (req, res) => {
 //   }
 
 //   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 const getById = async (req, res) => {
   // получили ид введённое пользователем из req.params
   const { id } = req.params
   // получаем с помощью функц getById книгу из базы с ид пользователя
-  const result = await books.getById(id)
+  // const result = await books.getById(id)
+
+
+  // 1) Book.findOne( {_id : id})
+  // const result = await Book.findOne( {_id : id})
+  // 2) Book.findById( id )
+  const result = await Book.findById( id )
+
   // если книги с таким ил нет в базе
   if (!result) {
     // HttpError если поймал ошибку кидает в catch , тот или status и message получает и выдаёт, или с правой стороны по умолчанию то что записали 500 и "Server error"
@@ -85,6 +99,7 @@ const getById = async (req, res) => {
   // отправляем результат на фронтенд
   res.json(result)
 }
+
 // +++++++++++++++++++++++++++++++++++++++++++
 
 const addBook = async (req, res) => {
@@ -100,23 +115,29 @@ const addBook = async (req, res) => {
 //     throw HttpError(400, error.message)
 //   }
   // если проверку все прошло от addSchema то отправляем запрос на сервер с телом для добавляения и выкидываем статус
-  const result = await books.addBook(req.body)
+  
+  // для работы с файлом JSON в папке
+  // const result = await books.addBook(req.body)
+
+  const result = await Book.create(req.body)
   // если добавили статус 201 и отправляем результат на фронтенд
   res.status(201).json(result)
 }
 
-const deleteById = async (req, res) => {
-  const { id } = req.params
-  const result = await books.deleteById(id)
+// const deleteById = async (req, res) => {
+//   const { id } = req.params
+//   const result = await books.deleteById(id)
 
-  // если книги с таким ил нет в базе
-  if (!result) {
-    // HttpError если поймал ошибку кидает в catch , тот или status и message получает и выдаёт, или с правой стороны по умолчанию то что записали 500 и "Server error"
-    throw HttpError(404, 'Not found')
-  }
+//   // если книги с таким ил нет в базе
+//   if (!result) {
+//     // HttpError если поймал ошибку кидает в catch , тот или status и message получает и выдаёт, или с правой стороны по умолчанию то что записали 500 и "Server error"
+//     throw HttpError(404, 'Not found')
+//   }
 
-  res.json({ message: 'Delete success' })
-}
+//   res.json({ message: 'Delete success' })
+// }
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 const updateById = async (req, res) => {
   // проверяем тело запроса что соответсвует требованиям Joi
@@ -132,7 +153,17 @@ const updateById = async (req, res) => {
   const { id } = req.params
   // отправляем запрос на изменения id из ссылки, req.body - все тело отправленное нам с фронтенда
 
-  const result = await books.updateById(id, req.body)
+
+
+
+  // const result = await books.updateById(id, req.body)
+
+  const result = await Book.findByIdAndUpdate(id, req.body, {new: true})
+
+
+
+
+
   // если книги с таким ил нет в базе
   if (!result) {
     // HttpError если поймал ошибку кидает в catch , тот или status и message получает и выдаёт, или с правой стороны по умолчанию то что записали 500 и "Server error"
@@ -148,6 +179,6 @@ module.exports = {
   getAll: controllerWrapper(getAll),
   getById: controllerWrapper(getById),
   addBook: controllerWrapper(addBook),
-  deleteById: controllerWrapper(deleteById),
+  // deleteById: controllerWrapper(deleteById),
   updateById: controllerWrapper(updateById)
 }

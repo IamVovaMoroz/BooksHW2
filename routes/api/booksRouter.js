@@ -7,25 +7,13 @@ const express = require('express')
 
 const bookController = require("../../controllers/bookController")
 
-const {validateBody} = require("../../middlewares")
+const {validateBody, isValidId} = require("../../middlewares")
 
-const schemas = require("../../schemas/booksShemas")
+// const schemas = require("../../schemas/booksShemas")
 
+const schemas = require("../../models/book")
 const router = express.Router()
 
-// импортируем функцию обработки и создания ошибок и статусов
-
-// const {HttpError} = require("../../helpers")
-
-// // импортируем обьект работы с книгами 
-// const books = require("../../models/books")
-
-// СОЗДАЁМ JOI схему - требования к получаемому обьекту от фронтенда, на соответствие в базе
-
-// const addSchema = Joi.object({
-//   title: Joi.string().required(),
-//   author: Joi.string().required(),
-// })
 
 
 // 1) ПОЛУЧЕНИЕ ВСЕХ КНИГ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -49,7 +37,7 @@ router.get('/', bookController.getAll )
 
 // 2) ПОЛУЧЕНИЕ КНИГИ ПО ИД (:id) который нужно прочитать из req.params мы получаем значение введённое пользователем ++++++++++++++++++++++++++++++++++++++++++
 
-router.get('/:id', bookController.getById)
+router.get('/:id', isValidId,  bookController.getById)
 
 // 3) ДОБАВЛЕНИЕ КНИГ В БАЗУ  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -58,11 +46,11 @@ router.post('/', validateBody(schemas.addSchema), bookController.addBook )
 
 //  4) УДАЛЕНИЕ ПО ИД +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-router.delete('/:id', bookController.deleteById)
+// router.delete('/:id', isValidId, bookController.deleteById)
 
 
 //  5) ОБНОВЛЕНИЕ КНИГИ ПО ИД +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-router.put('/:id',  validateBody(schemas.addSchema),  bookController.updateById)
+router.put('/:id', isValidId, validateBody(schemas.addSchema),  bookController.updateById)
 
 module.exports = router
