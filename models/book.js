@@ -35,9 +35,24 @@ const addSchema = Joi.object({
   author: Joi.string().required(),
   genre: Joi.string().valid('fantasy', 'love', 'fantastic').optional(),
   data: Joi.string().regex(/\d{2}-\d{2}-\d{4}/).optional(),
-  favorite: Joi.boolean().optional()
+  favorite: Joi.boolean()
 });
+
+const updateFavoriteSchemas = Joi.object({
+  
+    favorite: Joi.boolean().required()
+  });
+ 
+//   при таком импорт const {schemas} = require("../../models/book")
+const schemas = {
+    addSchema,
+    updateFavoriteSchemas
+}
 
 const Book = model('book', bookSchema);
 
-module.exports = { Book, addSchema };
+// при таком импорт const schemas = require("../../models/book")
+
+// module.exports = { Book, addSchema, updateFavoriteSchemas };
+
+module.exports = { Book, schemas };

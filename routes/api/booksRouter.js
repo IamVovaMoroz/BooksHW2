@@ -11,7 +11,7 @@ const {validateBody, isValidId} = require("../../middlewares")
 
 // const schemas = require("../../schemas/booksShemas")
 
-const schemas = require("../../models/book")
+const {schemas} = require("../../models/book")
 const router = express.Router()
 
 
@@ -46,11 +46,16 @@ router.post('/', validateBody(schemas.addSchema), bookController.addBook )
 
 //  4) УДАЛЕНИЕ ПО ИД +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-// router.delete('/:id', isValidId, bookController.deleteById)
+router.delete('/:id', isValidId, bookController.deleteById)
 
 
 //  5) ОБНОВЛЕНИЕ КНИГИ ПО ИД +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 router.put('/:id', isValidId, validateBody(schemas.addSchema),  bookController.updateById)
+
+// 6) обновление favorite. patch - когда точно знаем поле для обновления
+
+router.patch('/:id/favorite', isValidId, validateBody(schemas.updateFavoriteSchemas),  bookController.updateByIdFavorite)
+
 
 module.exports = router

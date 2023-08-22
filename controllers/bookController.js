@@ -13,7 +13,7 @@ const books = require('../models/books')
 
 // импортируем схему и модель(класс) для базы данных онлайн mongoDB.
 
-const {Book} = require("../models/book")
+const { Book } = require('../models/book')
 
 // СОЗДАЁМ JOI схему - требования к получаемому обьекту от фронтенда, на соответствие в базе
 
@@ -40,7 +40,6 @@ const getAll = async (req, res) => {
   // для работы с mongjDB
   const result = await Book.find()
   // const result = await Book.find({}, "data title")
-
 
   res.json(result)
 }
@@ -83,11 +82,10 @@ const getById = async (req, res) => {
   // получаем с помощью функц getById книгу из базы с ид пользователя
   // const result = await books.getById(id)
 
-
   // 1) Book.findOne( {_id : id})
   // const result = await Book.findOne( {_id : id})
   // 2) Book.findById( id )
-  const result = await Book.findById( id )
+  const result = await Book.findById(id)
 
   // если книги с таким ил нет в базе
   if (!result) {
@@ -105,17 +103,16 @@ const getById = async (req, res) => {
 const addBook = async (req, res) => {
   // используем схему нашу addSchema, вызываем метод validate, который проверит req.body
 
+  //   ЭТУ ОШИЬКУ ПЕРЕНЕСЛИ ВВАЛИДЕЙТ БОДИ
+  //   const { error } = addSchema.validate(req.body)
 
-//   ЭТУ ОШИЬКУ ПЕРЕНЕСЛИ ВВАЛИДЕЙТ БОДИ
-//   const { error } = addSchema.validate(req.body)
+  //   // если обьект прошёл валидацию, проверку успешно - error - undefined, если не прошёл проверку в error залетит какая ошибка в соответствии с валидатором . к примеру "author" is required
 
-//   // если обьект прошёл валидацию, проверку успешно - error - undefined, если не прошёл проверку в error залетит какая ошибка в соответствии с валидатором . к примеру "author" is required
-
-//   if (error) {
-//     throw HttpError(400, error.message)
-//   }
+  //   if (error) {
+  //     throw HttpError(400, error.message)
+  //   }
   // если проверку все прошло от addSchema то отправляем запрос на сервер с телом для добавляения и выкидываем статус
-  
+
   // для работы с файлом JSON в папке
   // const result = await books.addBook(req.body)
 
@@ -124,45 +121,71 @@ const addBook = async (req, res) => {
   res.status(201).json(result)
 }
 
-// const deleteById = async (req, res) => {
-//   const { id } = req.params
-//   const result = await books.deleteById(id)
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-//   // если книги с таким ил нет в базе
-//   if (!result) {
-//     // HttpError если поймал ошибку кидает в catch , тот или status и message получает и выдаёт, или с правой стороны по умолчанию то что записали 500 и "Server error"
-//     throw HttpError(404, 'Not found')
-//   }
 
-//   res.json({ message: 'Delete success' })
-// }
+const deleteById = async (req, res) => {
+  const { id } = req.params
+// для работы с файлом в папке на компе
+  // const result = await books.deleteById(id)
+
+  const result = await Book.findByIdAndRemove(id)
+
+  // если книги с таким ил нет в базе
+  if (!result) {
+    // HttpError если поймал ошибку кидает в catch , тот или status и message получает и выдаёт, или с правой стороны по умолчанию то что записали 500 и "Server error"
+    throw HttpError(404, 'Not found')
+  }
+
+  res.json({ message: 'Delete success' })
+}
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 const updateById = async (req, res) => {
   // проверяем тело запроса что соответсвует требованиям Joi
   // используем схему нашу addSchema, вызываем метод validate, который проверит req.body
-//   const { error } = addSchema.validate(req.body)
+  //   const { error } = addSchema.validate(req.body)
 
-//   // если обьект прошёл валидацию, проверку успешно - error - undefined, если не прошёл проверку в error залетит какая ошибка в соответствии с валидатором . к примеру "author" is required
+  //   // если обьект прошёл валидацию, проверку успешно - error - undefined, если не прошёл проверку в error залетит какая ошибка в соответствии с валидатором . к примеру "author" is required
 
-//   if (error) {
-//     throw HttpError(400, error.message)
-//   }
+  //   if (error) {
+  //     throw HttpError(400, error.message)
+  //   }
   // если все впорядке, обновляем. Берем Ид отправленный с фронтенда
   const { id } = req.params
   // отправляем запрос на изменения id из ссылки, req.body - все тело отправленное нам с фронтенда
 
+  // const result = await books.updateById(id, req.body)
 
+  const result = await Book.findByIdAndUpdate(id, req.body, { new: true })
 
+  // если книги с таким ил нет в базе
+  if (!result) {
+    // HttpError если поймал ошибку кидает в catch , тот или status и message получает и выдаёт, или с правой стороны по умолчанию то что записали 500 и "Server error"
+    throw HttpError(404, 'Not found')
+  }
+  // если получилось обновить рез на фронт высылаем
+  res.json(result)
+}
+
+const updateByIdFavorite = async (req, res) => {
+  // проверяем тело запроса что соответсвует требованиям Joi
+  // используем схему нашу addSchema, вызываем метод validate, который проверит req.body
+  //   const { error } = addSchema.validate(req.body)
+
+  //   // если обьект прошёл валидацию, проверку успешно - error - undefined, если не прошёл проверку в error залетит какая ошибка в соответствии с валидатором . к примеру "author" is required
+
+  //   if (error) {
+  //     throw HttpError(400, error.message)
+  //   }
+  // если все впорядке, обновляем. Берем Ид отправленный с фронтенда
+  const { id } = req.params
+  // отправляем запрос на изменения id из ссылки, req.body - все тело отправленное нам с фронтенда
 
   // const result = await books.updateById(id, req.body)
 
-  const result = await Book.findByIdAndUpdate(id, req.body, {new: true})
-
-
-
-
+  const result = await Book.findByIdAndUpdate(id, req.body, { new: true })
 
   // если книги с таким ил нет в базе
   if (!result) {
@@ -179,6 +202,7 @@ module.exports = {
   getAll: controllerWrapper(getAll),
   getById: controllerWrapper(getById),
   addBook: controllerWrapper(addBook),
-  // deleteById: controllerWrapper(deleteById),
-  updateById: controllerWrapper(updateById)
+  deleteById: controllerWrapper(deleteById),
+  updateById: controllerWrapper(updateById),
+  updateByIdFavorite: controllerWrapper(updateByIdFavorite)
 }
