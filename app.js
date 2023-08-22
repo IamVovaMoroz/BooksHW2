@@ -3,8 +3,12 @@ const logger = require('morgan')
 const cors = require('cors')
 // для работы env
 require("dotenv").config()
-// путь к роутам
+// путь к роутам booksRouter
 const booksRouter = require('./routes/api/booksRouter')
+
+// путь к роутам auth ипмортируем
+
+const authRouter = require('./routes/api/auth')
 
 const app = express()
 
@@ -16,6 +20,10 @@ app.use(logger(formatsLogger))
 app.use(cors())
 // Экспрес получает тело запроса и должен понять, чтобы он проверил есть ли тело в запросе, если да то какой тип, по заголовку content type из запроса. app.use(express.json())
 app.use(express.json())
+
+// все запросы /api/auth обрабатываем authRouter
+app.use('/api/auth', authRouter)
+
 // все запросы с api/books искать тут booksRouter
 app.use('/api/books', booksRouter)
 // для отображения сообщения для ссылок , которых нет
