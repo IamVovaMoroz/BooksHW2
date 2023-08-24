@@ -3,6 +3,10 @@ const express = require('express')
 
 const reviewController = require("../../controllers/reviewController")
 
+const {validateBody, isValidId, authenticate} = require("../../middlewares")
+
+const {schemas} = require("../../models/review")
+
 const router = express.Router()
 
 // router.get('/',  authenticate, bookController.getAll )
@@ -11,16 +15,16 @@ const router = express.Router()
 router.get('/', reviewController.getAllReviews)
 
 // 2) получить отзыв пользователя GET /reviews/own
-// router.get('/:id', authenticate, reviewController.getUserReview)
+router.get('/:id', authenticate, reviewController.getUserReview)
 
-// 3 ) Добавление отзыва пользователем POST /reviews/own
+// 3 ) Добавление отзыва.  POST /reviews/own
 
-// router.post(
-//   '/:id',
-//   authenticate,
-//   validateBody(schemas.reviewSchema),
-//   reviewController.addReview
-// )
+router.post(
+  '/',
+  authenticate,
+  validateBody(schemas.addReviewSchema),
+  reviewController.addReview
+)
 
 //  4) Редактирование своего отзыва пользователем PATCH /reviews/own
 
@@ -33,6 +37,6 @@ router.get('/', reviewController.getAllReviews)
 
 //  5) Удаление отзыва пользователем
 
-// router.delete('/:id', authenticate, reviewController.deleteReview)
+router.delete('/:id', authenticate, reviewController.deleteReviewById)
 
 module.exports = router
