@@ -23,6 +23,13 @@ const bookSchema = new Schema(
       type: String,
       match: /\d{2}-\d{2}-\d{4}/,
       required: false
+    },
+    owner: {
+        // строка для записи ид пользователя особая
+        type: Schema.Types.ObjectId,
+        // записываем с какой коллекции данный ид польз
+        ref: "user",
+        required: true
     }
   },
   { versionKey: false, timestamps: true }

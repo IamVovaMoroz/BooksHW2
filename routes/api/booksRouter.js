@@ -7,7 +7,7 @@ const express = require('express')
 
 const bookController = require("../../controllers/bookController")
 
-const {validateBody, isValidId} = require("../../middlewares")
+const {validateBody, isValidId, authenticate} = require("../../middlewares")
 
 // const schemas = require("../../schemas/booksShemas")
 
@@ -31,31 +31,31 @@ const router = express.Router()
 // validateBody(schemas.addSchema) мы передаем схему и она возращает нам функцию
 
 
-router.get('/', bookController.getAll )
+router.get('/',  authenticate, bookController.getAll )
 
 
 
 // 2) ПОЛУЧЕНИЕ КНИГИ ПО ИД (:id) который нужно прочитать из req.params мы получаем значение введённое пользователем ++++++++++++++++++++++++++++++++++++++++++
 
-router.get('/:id', isValidId,  bookController.getById)
+router.get('/:id',  authenticate, isValidId,  bookController.getById)
 
 // 3) ДОБАВЛЕНИЕ КНИГ В БАЗУ  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //  Для получения тела запроса обращаемся с фронтенда от пользователя = req.body
-router.post('/', validateBody(schemas.addSchema), bookController.addBook )
+router.post('/',  authenticate, validateBody(schemas.addSchema), bookController.addBook )
 
 //  4) УДАЛЕНИЕ ПО ИД +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-router.delete('/:id', isValidId, bookController.deleteById)
+router.delete('/:id', authenticate, isValidId, bookController.deleteById)
 
 
 //  5) ОБНОВЛЕНИЕ КНИГИ ПО ИД +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-router.put('/:id', isValidId, validateBody(schemas.addSchema),  bookController.updateById)
+router.put('/:id',  authenticate, isValidId, validateBody(schemas.addSchema),  bookController.updateById)
 
 // 6) обновление favorite. patch - когда точно знаем поле для обновления
 
-router.patch('/:id/favorite', isValidId, validateBody(schemas.updateFavoriteSchemas),  bookController.updateByIdFavorite)
+router.patch('/:id/favorite',  authenticate, isValidId, validateBody(schemas.updateFavoriteSchemas),  bookController.updateByIdFavorite)
 
 
 
