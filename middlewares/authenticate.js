@@ -21,11 +21,11 @@ const authenticate = async (req, res, next) => {
     // проверяем есть ли человек с токеном в базе
     const user = await User.findById(id)
     if (!user) {
-        next(HttpError(401))
-    //   next(HttpError(401, "User not found"))
+      next(HttpError(401))
+      //   next(HttpError(401, "User not found"))
     }
     // добавляем в обект ключ user , если его нашли, который явл. юзером, которого нашли
-req.user = user
+    req.user = user
     next()
   } catch (error) {
     next(HttpError(401))

@@ -10,6 +10,8 @@ const booksRouter = require('./routes/api/booksRouter')
 
 const authRouter = require('./routes/api/auth')
 
+const reviewRouter = require('./routes/api/reviews');  // ПРОЕКТ импортируем роут
+
 const app = express()
 
 
@@ -20,6 +22,10 @@ app.use(logger(formatsLogger))
 app.use(cors())
 // Экспрес получает тело запроса и должен понять, чтобы он проверил есть ли тело в запросе, если да то какой тип, по заголовку content type из запроса. app.use(express.json())
 app.use(express.json())
+
+// все запросы по отзывам обрабатываем роутером!!!  
+app.use('/api/reviews', reviewRouter);   // ПРОЕКТ путь для всех роутов
+
 
 // все запросы /api/auth обрабатываем authRouter
 app.use('/api/auth', authRouter)
