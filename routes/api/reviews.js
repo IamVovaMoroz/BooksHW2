@@ -28,12 +28,12 @@ router.post(
 
 //  4) Редактирование своего отзыва пользователем PATCH /reviews/own
 
-// router.patch(
-//   '/:id',
-//   authenticate,
-//   validateBody(schemas.updateReviewSchemas),
-//   reviewController.updateByIReview
-// )
+router.patch(
+  '/:id',
+  authenticate,
+  validateBody(schemas.addReviewSchema),
+  reviewController.updateReviewById
+)
 
 //  5) Удаление отзыва пользователем
 
