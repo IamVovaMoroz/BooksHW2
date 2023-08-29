@@ -15,7 +15,7 @@ const router = express.Router()
 router.get('/', reviewController.getAllReviews)
 
 // 2) получить отзыв пользователя GET /reviews/own
-router.get('/:id', authenticate, reviewController.getUserReview)
+router.get('/:id', isValidId, authenticate, reviewController.getUserReview)
 
 // 3 ) Добавление отзыва.  POST /reviews/own
 

@@ -4,11 +4,19 @@ const { HttpError, controllerWrapper } = require('../helpers')
 const { Review } = require('../models/review')
 
 // 1) Получение всех отзывов в базе
-const getAllReviews = async (req, res) => {
-  const result = await Review.find()
+// const getAllReviews = async (req, res) => {
+//   const result = await Review.find()
 
-  res.json(result)
-}
+//   res.json(result)
+// }
+const getAllReviews = async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+  const skip = (page - 1) * limit;
+
+  const reviews = await Review.find({}, '-createdAt -updatedAt').skip(skip).limit(parseInt(limit));
+
+  res.json(reviews);
+};
 
 // 2) Получение своего отзыва пользователем
 const getUserReview = async (req, res) => {
@@ -17,7 +25,7 @@ const getUserReview = async (req, res) => {
 
   // Нужно ли удалять не нужные поля в ответе?
 
-  const result = await Review.findById(id)
+  const result = await Review.findById(id,'-createdAt -updatedAt')
 
   // если книги с таким ил нет в базе
   if (!result) {
