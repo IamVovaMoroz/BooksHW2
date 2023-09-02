@@ -12,7 +12,7 @@ async function uploadImage() {
     const formData = new FormData();
     formData.append('image', await fs.readFile(imagePath));
 
-    const uploadUrl = 'http://localhost:8080/auth/user/';
+    const uploadUrl = 'http://localhost:8080/auth/avatar/';
 
     try {
         const response = await axios.post(uploadUrl, formData);
@@ -23,7 +23,8 @@ async function uploadImage() {
             console.error('Failed to upload image.');
         }
     } catch (error) {
-        console.error('Error uploading image:', error);
+        
+        console.error('Error uploading image:', error.message);
     }
 }
 

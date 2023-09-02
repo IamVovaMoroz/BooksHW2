@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  
+ 
+
+    <form id="form" enctype="multipart/form-data">
+        <input type="file" name="image" multiple>
+        <button type="submit">Отправить</button>
+    </form>
+    <script>
+        const form = document.getElementById("form")
+        form.addEventListener("submit", function(event){
+            event.preventDefault(); // Используйте "event", а не "e"
+            // this принадлежит элементу, к которому привязано событие и извлекаем file название
+            const {image} = this.elements
+            // так достучаться к файлу картинке
+            // console.log(image.files[0])
+            const data = new FormData()
+            data.append("image", image.files[0])
+        })
+
+        const isComing = confirm("Please confirm hotel reservation");
+console.log(isComing);
+    </script>
+</body>
+</html>
