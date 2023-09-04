@@ -17,7 +17,7 @@
         const form = document.getElementById("form")
         form.addEventListener("submit", function(event){
             event.preventDefault(); // Используйте "event", а не "e"
-            // this принадлежит элементу, к которому привязано событие и извлекаем file название
+            // this. принадлежит элементу, к которому привязано событие и извлекаем file название
             const {image} = this.elements
             // так достучаться к файлу картинке/
             // console.log(image.files[0])
