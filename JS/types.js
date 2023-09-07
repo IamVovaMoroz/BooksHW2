@@ -115,8 +115,181 @@
 
 // ++++++++  Мы можем образаться к некотором функция до того как они определены
 
-console.log(' sum(1,2)', sum( 1, 2))  // 3
-function sum(a,b) {
-    return a + b
-}
+// console.log(' sum(1,2)', sum( 1, 2))  // 3
+// function sum(a,b) {
+//     return a + b
+// }
+//  1) 
+// var i = 42
+// console.log('i', i) //42
 
+// 2 
+// console.log('i', i) // undefined  i е определенна но не выдает, но видет что дальше есть и выдает значение подвержена хостингу
+// var i = 42
+// 3
+// console.log('i', i) // ошибка, обращение до определения
+// let i = 42
+
+// Function expression , Function declaration
+
+
+// console.log('declaration', declaration(25))
+
+// function declaration(num){
+//     return num **2
+// }
+
+
+// ++++++++++++++++++++++++ Function expression , если записанно в переменную прочитается только после инициализации
+
+// console.log('expression', expression(25))
+
+// var expression = function(num){
+//     return num **2
+// }
+
+// console.log('expression', expression(25))
+
+
+// let доступна в рамках блочного scope
+
+// let a = "outside a"
+// let b = "outside b"
+
+// {
+// // console.log('a', a) // "outside a"
+// // console.log('b', b) // "outside b"
+
+// b = "inside b" // переопределили на весь scope
+// let a = "inside a" // let используется внути scope и не конфликтует
+
+// // console.log('a', a)  // "inside a"
+// // console.log('b', b) // "inside b"
+// }
+
+// console.log('a', a) // " outside a"
+// console.log('b', b) // "inside b"
+
+// const нельзя переопределять
+
+// const PORT = 8080
+
+// PORT = 3000
+
+// const obj = {}
+// obj.name = "name"
+
+// console.log(obj)
+
+// delete obj.name
+
+// console.log(obj)
+
+// Замыкание, когда функция имеет доступ к переменным извышестоящего scope. замыкает в себе какое то значение(сохраняет) и вышестоящего scope. Функция внутри функции
+
+// function sayHell0(name) {
+//     const message = "Hello" + name
+// // function не имеет переменную name, но ей доступна она из скоупа sayHell0. Как бы в себе замкнула
+//     return function (){
+//         console.log('message =>>', message)  // message =>> HelloVova
+//     } 
+// }
+
+// const helloToVova = sayHell0("Vova")
+
+// console.log('helloToVova =>>', helloToVova)  // helloToVova =>> [Function (anonymous)]
+// console.log('helloToVova() =>>', helloToVova()) // helloToVova() =>> undefined
+// console.log(helloToVova) 
+
+
+// function createFramework() {
+//     // fw является приватной переменной, мы мы можем с ней взаимодействовать. Оно замкнуто
+//     const fw = ["react", "angular"];
+
+//     return {
+//         print: function() {
+//             console.log(fw.join(" "));
+//         },
+//         add: function(framework) {
+//             fw.push(framework);
+//         }
+//     };
+// }
+
+// const manager = createFramework();
+// manager.print();
+// manager.add("vue"); // Пример добавления фреймворка
+// manager.print(); // Выведет: "react angular vue"
+
+// setTimeout
+
+// const fib = [1, 2, 3, 4]
+
+//  for (let i = 0; i < fib.length; i++) {
+// setTimeout(function(){
+//     console.log(`fib[${i}] = ${fib[i]} `)
+// }, 1500)
+// }
+
+// const fib = [1, 2, 3, 5, 8, 13];
+
+// for (var i = 0; i < fib.length; i++) {
+//     (function(j) {
+//         setTimeout(function() {
+//             console.log("fib[" + j + "] = " + fib[j]);
+//         }, 1500);
+//     })(i);
+// }
+
+// iife
+
+// let res = []
+
+// // for (var i = 0; i < 5; i++ ){
+// //     res.push(function(){
+// //         // если используем var i = 0 , то обращаемся к i = 5
+// //        console.log(i)
+// //     })
+// // }
+
+// // res[3]()
+
+// for (var i = 0; i < 5; i++ ){
+//     (function(){
+//         var j = i
+//         res.push(function()
+//         {console.log(j)} )
+//     })()
+// }
+
+// res[2]()
+
+// CONTEXT
+
+// const person = {
+//     surname: "Moroz",
+//     knows: function(what, name){
+//         console.log(`Ты ${what} знаешь, ${name} ${this.surname}`)
+
+//     }
+// }
+
+// person.knows("всё", "Бран") // Ты всё знаешь, Бран Moroz
+
+// const john = {surname: "Сноу"}
+
+// person.knows.call(john,  "ничего не", "Джон") // Ты ничего не знаешь, Джон Сноу
+// person.knows.apply(john,  ["ничего не", "Джон"]) //  Ты ничего не знаешь, Джон Сноу
+// person.knows.bind(john,  "ничего не", "Джон") () //  Ты ничего не знаешь, Джон Сноу
+
+// const result = person.knows.bind(john,  "ничего не", "Джон")
+// result() //  Ты ничего не знаешь, Джон Сноу
+
+
+// function Person(name, age){
+//     this.name = name
+//     this.age = age
+//     console.log(this)
+// }
+
+// const elena = new Person("Elena", 20)
