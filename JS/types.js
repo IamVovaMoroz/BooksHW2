@@ -293,3 +293,66 @@
 // }
 
 // const elena = new Person("Elena", 20)
+
+// __proto__
+// Object.getPrototypeOf()
+
+// класс
+// function Cat(name, color){
+//     this.name = name
+//     this.color = color
+//     console.log(this)
+// }
+// // this обращено к function Cat
+// Cat.prototype.voice = function(){
+//     console.log(`Cat ${this.name} says myay`)
+// }
+
+// const cat = new Cat("Myr", "white")
+// console.log(Cat.prototype)
+// console.log(cat.__proto__ === Cat.prototype)
+
+// cat.voice()
+
+// function Person(){
+//     Person.prototype.legs = 2
+//     Person.prototype.skin = "white"
+//     Person.prototype.beard = "black"
+// }
+
+
+// const person = new Person()
+// person.name = "Volodymyr"
+
+// console.log('skin' in person)
+// console.log('beard' in person)
+// console.log(person.beard) // black
+
+// как проверить какие свойства в прототипе а какие собственные?
+
+// console.log(person.hasOwnProperty("beard"))
+
+
+// const proto = {new:2019}
+
+// const myNew = Object.create(proto)
+
+// console.log(myNew.hasOwnProperty("new"))
+
+// сколько раз каждый элемент встречается в масиве?
+// {kiwi:2, apple:2, mango:1 }
+
+const fruits = ["kiwi", "apple", "mango", "kiwi", "apple"]
+
+const count = {};
+
+for(const fruit of fruits) {
+    if(count[fruit]){
+        count[fruit] +=1
+    }
+    else{
+        count[fruit] = 1
+    }
+}
+
+console.log(count)
